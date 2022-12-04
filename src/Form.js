@@ -14,7 +14,7 @@ function Form() {
   const [phone, setPhone] = useState();
   const [email, setEmail] = useState();
   const [gender, setGender] = useState();
-  const [category, setCategory] = useState();
+  const [category, setCategory] = useState([]);
   const [options] = useState(data);
   console.log(gender);
   function handleChangeFname(event) {
@@ -35,8 +35,11 @@ function Form() {
   function handleChangeEmail(event) {
     setEmail(event.target.value);
   }
-  function handleChangeCategory(event) {
-    setCategory(event.target.value);
+
+
+  function Submit(){
+    let result = {"First Name": fname, "Last Name":lname, "Email Address":email,"Phone Number":phone, "Gender":gender, "Category":category}
+    console.log(result);
   }
 
   return (
@@ -84,7 +87,17 @@ function Form() {
 
           <div className="form-group mt-3">
             <label>Category</label>
-            <Multiselect options={options} displayValue="name"></Multiselect>
+            <Multiselect options={options} 
+            displayValue="name" 
+            onSelect={(event)=>{
+              setCategory(event);
+              console.log(Array.isArray(event))
+            }}
+            onRemove = {(event)=>{
+              setCategory(event);
+             console.log(event)
+            }}
+            ></Multiselect>
           </div>
 
           <div className="form-group mt-3">
@@ -116,7 +129,7 @@ function Form() {
           </div>
 
           <div className="d-grid gap-2 mt-3">
-            <button type="submit" className="btn btn-primary">
+            <button type="button" className="btn btn-primary" onClick={Submit}>
               Submit
             </button>
           </div>
