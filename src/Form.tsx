@@ -1,7 +1,16 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { User } from "./model-files/User";
 import { Multiselect } from "multiselect-react-dropdown";
+import { addUser, getUserData } from "./model-files/userData";
 import "./Form.css";
+import Table from "@mui/material/Table";
+import TableBody from "@mui/material/TableBody";
+import TableCell from "@mui/material/TableCell";
+import TableContainer from "@mui/material/TableContainer";
+import TableHead from "@mui/material/TableHead";
+import TableRow from "@mui/material/TableRow";
+import Paper from "@mui/material/Paper";
+
 var validator = require("validator");
 function Form() {
   const data = [
@@ -10,6 +19,8 @@ function Form() {
     { name: "Cat three", id: 3 },
     { name: "Cat four", id: 4 },
   ];
+  const [userData, setUserData] = useState<User[]>();
+
   const [user, setUser] = useState<User>({
     firstName: "",
     lastName: "",
@@ -18,6 +29,12 @@ function Form() {
     gender: "",
     category: [],
   });
+
+  useEffect(() => {
+    setUserData(getUserData());
+    console.log(userData);
+  });
+
   const [options] = useState(data);
   function handleChangeFname(event: any) {
     setUser((prev) => ({ ...prev, firstName: event.target.value }));
@@ -48,6 +65,9 @@ function Form() {
 
   function Submit() {
     console.log(user);
+    addUser(user);
+    setUserData(getUserData());
+    console.log(getUserData());
   }
 
   return (
@@ -166,14 +186,14 @@ function Form() {
       </div>
       <div className="col-sm">
         <div
-          className="container"
+          className="container-fluid"
           style={{
             alignContent: "center",
             justifyContent: "center",
             margin: "10px",
           }}
         >
-          sfs
+          {userData?.length}
         </div>
       </div>
     </div>
