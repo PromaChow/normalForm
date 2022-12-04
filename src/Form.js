@@ -1,6 +1,7 @@
 import "./Form.css";
 import { useState } from "react";
 import { Multiselect } from "multiselect-react-dropdown";
+var validator = require('validator');
 function Form() {
   const data = [
     { name: "Cat one", id: 1 },
@@ -16,7 +17,8 @@ function Form() {
   const [gender, setGender] = useState();
   const [category, setCategory] = useState([]);
   const [options] = useState(data);
-  console.log(gender);
+  
+
   function handleChangeFname(event) {
     setFname(event.target.value);
   }
@@ -26,14 +28,26 @@ function Form() {
   }
 
   function handleChangePhone(event) {
-    setPhone(event.target.value);
+     var phoneno = /^(?:(?:\+|00)88|01)?\d{11}$/;
+      if(event.target.value.match(phoneno)) {
+        setPhone(event.target.value);
+        console.log("yes");
+      }
+      else {
+        console.log("no");
+      }
+    
   }
 
   function handleChangeGender(event) {
     setGender(event.target.value);
   }
   function handleChangeEmail(event) {
-    setEmail(event.target.value);
+    if(validator.isEmail(event.target.value)){
+      setEmail(event.target.value);
+    }
+    else console.log("no");
+    
   }
 
 
@@ -78,7 +92,7 @@ function Form() {
           <div className="form-group mt-3">
             <label>Phone Number</label>
             <input
-              type="password"
+              type="tel"
               className="form-control mt-1"
               placeholder="Enter Phone Number"
               onChange={handleChangePhone}
