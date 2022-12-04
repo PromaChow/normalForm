@@ -2,6 +2,7 @@ import { useState } from "react";
 import { User } from "./model-files/User";
 import { Multiselect } from "multiselect-react-dropdown";
 import "./Form.css";
+var validator = require("validator");
 function Form() {
   const data = [
     { name: "Cat one", id: 1 },
@@ -18,6 +19,36 @@ function Form() {
     category: [],
   });
   const [options] = useState(data);
+  function handleChangeFname(event: any) {
+    setUser((prev) => ({ ...prev, firstName: event.target.value }));
+  }
+
+  function handleChangeLname(event: any) {
+    setUser((prev) => ({ ...prev, lastName: event.target.value }));
+  }
+
+  function handleChangePhone(event: any) {
+    var phoneno = /^(?:(?:\+|00)88|01)?\d{11}$/;
+    if (event.target.value.match(phoneno)) {
+      setUser((prev) => ({ ...prev, phone: event.target.value }));
+      console.log("yes");
+    } else {
+      console.log("no");
+    }
+  }
+
+  function handleChangeGender(event: any) {
+    setUser((prev) => ({ ...prev, gender: event.target.value }));
+  }
+  function handleChangeEmail(event: any) {
+    if (validator.isEmail(event.target.value)) {
+      setUser((prev) => ({ ...prev, emailAddress: event.target.value }));
+    } else console.log("no");
+  }
+
+  function Submit() {
+    console.log(user);
+  }
 
   return (
     <div className="row overflow-auto">
@@ -40,6 +71,7 @@ function Form() {
                   type="text"
                   className="form-control mt-1"
                   placeholder="Enter First Name"
+                  onChange={handleChangeFname}
                 />
               </div>
               <div className="form-group mt-3">
@@ -48,6 +80,7 @@ function Form() {
                   type="text"
                   className="form-control mt-1"
                   placeholder="Enter Last Name"
+                  onChange={handleChangeLname}
                 />
               </div>
               <div className="form-group mt-3">
@@ -56,6 +89,7 @@ function Form() {
                   type="email"
                   className="form-control mt-1"
                   placeholder="Enter Email"
+                  onChange={handleChangeEmail}
                 />
               </div>
               <div className="form-group mt-3">
@@ -64,6 +98,7 @@ function Form() {
                   type="tel"
                   className="form-control mt-1"
                   placeholder="Enter Phone Number"
+                  onChange={handleChangePhone}
                 />
               </div>
 
@@ -72,6 +107,19 @@ function Form() {
                 <Multiselect
                   options={options}
                   displayValue="name"
+                  onSelect={(event) => {
+                    setUser((prev) => ({
+                      ...prev,
+                      category: event,
+                    }));
+                    console.log(Array.isArray(event));
+                  }}
+                  onRemove={(event) => {
+                    setUser((prev) => ({
+                      ...prev,
+                      category: event,
+                    }));
+                  }}
                 ></Multiselect>
               </div>
 
@@ -82,6 +130,7 @@ function Form() {
                   value="Male"
                   name="gender"
                   style={{ marginLeft: 10 }}
+                  onChange={handleChangeGender}
                 />{" "}
                 Male
                 <input
@@ -89,6 +138,7 @@ function Form() {
                   value="Female"
                   name="gender"
                   style={{ marginLeft: 10 }}
+                  onChange={handleChangeGender}
                 />{" "}
                 Female
                 <input
@@ -96,12 +146,17 @@ function Form() {
                   value="Other"
                   name="gender"
                   style={{ marginLeft: 10 }}
+                  onChange={handleChangeGender}
                 />{" "}
                 Other
               </div>
 
               <div className="d-grid gap-2 mt-3">
-                <button type="button" className="btn btn-primary">
+                <button
+                  type="button"
+                  className="btn btn-primary"
+                  onClick={Submit}
+                >
                   Submit
                 </button>
               </div>
