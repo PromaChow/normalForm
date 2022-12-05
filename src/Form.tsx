@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { Fragment, useEffect, useState } from "react";
 import { User } from "./model-files/User";
 import { Multiselect } from "multiselect-react-dropdown";
 import { addUser, getUserData } from "./model-files/userData";
@@ -10,6 +10,7 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
+import { ResetTv } from "@mui/icons-material";
 
 var validator = require("validator");
 function Form() {
@@ -29,12 +30,10 @@ function Form() {
     gender: "",
     category: [],
   });
-
   useEffect(() => {
     setUserData(getUserData());
-    console.log(userData);
-  });
-
+    //  console.log(userData);
+  }, []);
   const [options] = useState(data);
   function handleChangeFname(event: any) {
     setUser((prev) => ({ ...prev, firstName: event.target.value }));
@@ -63,9 +62,24 @@ function Form() {
     } else console.log("no");
   }
 
-  function Submit() {
+  function Submit(event: any) {
+    event.preventDefault();
+
+    console.log(userData);
     addUser(user);
+    console.log(user);
+
     setUserData([...userData, user]);
+    console.log(userData);
+
+    setUser({
+      firstName: "",
+      lastName: "",
+      emailAddress: "",
+      phone: "",
+      gender: "",
+      category: [],
+    });
   }
 
   return (
@@ -87,6 +101,7 @@ function Form() {
                 <label>First Name</label>
                 <input
                   type="text"
+                  value={user.firstName}
                   className="form-control mt-1"
                   placeholder="Enter First Name"
                   onChange={handleChangeFname}
@@ -97,6 +112,7 @@ function Form() {
                 <input
                   type="text"
                   className="form-control mt-1"
+                  value={user.lastName}
                   placeholder="Enter Last Name"
                   onChange={handleChangeLname}
                 />
@@ -106,6 +122,7 @@ function Form() {
                 <input
                   type="email"
                   className="form-control mt-1"
+                  value={user.emailAddress}
                   placeholder="Enter Email"
                   onChange={handleChangeEmail}
                 />
@@ -114,6 +131,7 @@ function Form() {
                 <label>Phone Number</label>
                 <input
                   type="tel"
+                  value={user.phone}
                   className="form-control mt-1"
                   placeholder="Enter Phone Number"
                   onChange={handleChangePhone}
@@ -125,17 +143,19 @@ function Form() {
                 <Multiselect
                   options={options}
                   displayValue="name"
-                  onSelect={(event) => {
+                  selectedValues={user.category}
+                  onSelect={(selectedList, selectedItem) => {
+                    console.log(userData, selectedList);
                     setUser((prev) => ({
                       ...prev,
-                      category: event,
+                      category: selectedList,
                     }));
-                    console.log(Array.isArray(event));
                   }}
-                  onRemove={(event) => {
+                  onRemove={(selectedList, selectedItem) => {
+                    console.log(userData, selectedList);
                     setUser((prev) => ({
                       ...prev,
-                      category: event,
+                      category: selectedList,
                     }));
                   }}
                 ></Multiselect>
@@ -171,7 +191,7 @@ function Form() {
 
               <div className="d-grid gap-2 mt-3">
                 <button
-                  type="button"
+                  type="submit"
                   className="btn btn-primary"
                   onClick={Submit}
                 >
@@ -191,7 +211,48 @@ function Form() {
             margin: "10px",
           }}
         >
-          {userData?.length}
+          <TableContainer component={Paper}>
+            <Table
+              sx={{ minWidth: 650 }}
+              size="small"
+              aria-label="a dense table"
+            >
+              <TableHead>
+                <TableRow>
+                  <TableCell>First Name</TableCell>
+                  <TableCell align="right">Last Name</TableCell>
+                  <TableCell align="right">Gender</TableCell>
+                  <TableCell align="right">Email Address</TableCell>
+                  <TableCell align="right">Phone Number</TableCell>
+                  <TableCell align="right">Category</TableCell>
+                </TableRow>
+              </TableHead>
+
+              <TableBody>
+                {userData.map((row, k) => (
+                  <Fragment>
+                    <TableRow key={k++}>
+                      <TableCell component="th" scope="row">
+                        {row.firstName}
+                      </TableCell>
+                      <TableCell align="right">{row.lastName}</TableCell>
+                      <TableCell align="right">{row.gender}</TableCell>
+                      <TableCell align="right">{row.emailAddress}</TableCell>
+                      <TableCell align="right">{row.phone}</TableCell>
+                      <TableCell align="right">{row.category.length}</TableCell>
+                    </TableRow>
+                    {/* {row.category.map((cat) => (
+                      <TableRow>
+                        <TableCell align="right">
+                          {Array.isArray(cat)}
+                        </TableCell>
+                      </TableRow>
+                    ))} */}
+                  </Fragment>
+                ))}
+              </TableBody>
+            </Table>
+          </TableContainer>
         </div>
       </div>
     </div>
