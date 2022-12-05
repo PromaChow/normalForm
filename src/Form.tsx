@@ -107,7 +107,7 @@ function Form() {
 
   return (
     <div className="row overflow-auto">
-      <div className="col-sm">
+      <div className="col">
         <div
           className="container-fluid"
           style={{
@@ -213,7 +213,7 @@ function Form() {
           </form>
         </div>
       </div>
-      <div className="col-sm">
+      <div className="col-8">
         <div
           className="container-fluid"
           style={{
@@ -229,13 +229,14 @@ function Form() {
               aria-label="a dense table"
             >
               <TableHead>
-                <TableRow>
-                  <TableCell>First Name</TableCell>
-                  <TableCell align="right">Last Name</TableCell>
-                  <TableCell align="right">Gender</TableCell>
-                  <TableCell align="right">Email Address</TableCell>
-                  <TableCell align="right">Phone Number</TableCell>
-                  <TableCell align="right">Category</TableCell>
+                <TableRow  sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
+                  <TableCell align="left">First Name</TableCell>
+                  <TableCell align="left">Last Name</TableCell>
+                  <TableCell align="left">Gender</TableCell>
+                  <TableCell align="left">Email Address</TableCell>
+                  <TableCell align="left">Phone Number</TableCell>
+                  <TableCell align="left">Category</TableCell>
+                  
                 </TableRow>
               </TableHead>
 
@@ -246,19 +247,13 @@ function Form() {
                       <TableCell component="th" scope="row">
                         {row.firstName}
                       </TableCell>
-                      <TableCell align="right">{row.lastName}</TableCell>
-                      <TableCell align="right">{row.gender}</TableCell>
-                      <TableCell align="right">{row.emailAddress}</TableCell>
-                      <TableCell align="right">{row.phone}</TableCell>
-                      
+                      <TableCell align="left" >{row.lastName}</TableCell>
+                      <TableCell align="left" >{row.gender}</TableCell>
+                      <TableCell align="left" >{row.emailAddress}</TableCell>
+                      <TableCell align="left" >{row.phone}</TableCell>
+                      <TableCell align="left" >{row.category.join(",")}</TableCell>
                     </TableRow>
-                    {row.category.map((cat) => (
-                      <TableRow>
-                        <TableCell align="right">
-                          {cat}
-                        </TableCell>
-                      </TableRow>
-                    ))}
+                   
                   </Fragment>
                 ))}
               </TableBody>
