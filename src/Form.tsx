@@ -42,10 +42,10 @@ function Form() {
     category: [],
   });
 
-  useEffect(() => {
-    setUserData(getUserData());
-    //  console.log(userData);
-  }, []);
+  // useEffect(() => {
+  //   setUserData(getUserData());
+  //   //  console.log(userData);
+  // }, []);
 
   function handleChangeFname(event: any) {
     setUser((prev) => ({ ...prev, firstName: event.target.value }));
