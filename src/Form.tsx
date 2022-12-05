@@ -1,4 +1,4 @@
-import { Fragment, useEffect, useState } from "react";
+import { Fragment, useEffect, useRef, useState } from "react";
 import { User } from "./model-files/User";
 import { Multiselect } from "multiselect-react-dropdown";
 import { addUser, getUserData } from "./model-files/userData";
@@ -10,6 +10,7 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
+import SearchComponent from "react-material-ui-searchbar";
 
 import { default as ReactSelect } from "react-select";
 import Select from "react-select";
@@ -30,7 +31,10 @@ export const colourOptions = [
 
 function Form() {
   const [userData, setUserData] = useState<User[]>([]);
+  const [searched, setSearched] = useState<string>("");
+  const [rows, setRows] = useState<User[]>([]);
   const label: any[] = [];
+  const save = useRef<User[]>(userData);
   const [options] = useState(colourOptions);
   const newDataArray: any[] = [];
   const [user, setUser] = useState<User>({
@@ -42,10 +46,11 @@ function Form() {
     category: [],
   });
 
-  // useEffect(() => {
-  //   setUserData(getUserData());
-  //   //  console.log(userData);
-  // }, []);
+  useEffect(() => {
+    setRows([...userData]);
+    save.current = [...userData];
+    //  console.log(userData);
+  }, [rows]); 
 
   function handleChangeFname(event: any) {
     setUser((prev) => ({ ...prev, firstName: event.target.value }));
@@ -94,6 +99,7 @@ function Form() {
     console.log(user);
 
     setUserData([...userData, user]);
+    
     console.log("fin", userData);
     setUser({
       firstName: "",
@@ -104,6 +110,9 @@ function Form() {
       category: [],
     });
   }
+
+
+
 
   return (
     <div className="row overflow-auto">
@@ -222,6 +231,16 @@ function Form() {
             margin: "10px",
           }}
         >
+            <SearchComponent onChangeHandle={(searchedVal:string)=>{
+               let filteredRows = userData.filter((row) => {
+                return row.firstName.toLowerCase().includes(searchedVal.toLowerCase());
+              });
+              setRows([...filteredRows]);
+              save.current = [...filteredRows];
+              console.log(save.current);
+             
+             
+            }} />
           <TableContainer component={Paper}>
             <Table
               sx={{ minWidth: 650 }}
@@ -241,7 +260,7 @@ function Form() {
               </TableHead>
 
               <TableBody>
-                {userData.map((row, k) => (
+                {save.current.map((row, k) => (
                   <Fragment>
                     <TableRow key={k++}>
                       <TableCell component="th" scope="row">
