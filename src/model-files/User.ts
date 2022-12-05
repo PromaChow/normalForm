@@ -4,5 +4,5 @@ export interface User {
   emailAddress: string;
   phone: string;
   gender: string;
-  category: [];
+  category: string[];
 }

@@ -10,18 +10,30 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
-import { ResetTv } from "@mui/icons-material";
+
+import { default as ReactSelect } from "react-select";
+import Select from "react-select";
+
+import { components } from "react-select";
+import { SocialDistanceOutlined } from "@mui/icons-material";
 
 var validator = require("validator");
-function Form() {
-  const data = [
-    { name: "Cat one", id: 1 },
-    { name: "Cat two", id: 2 },
-    { name: "Cat three", id: 3 },
-    { name: "Cat four", id: 4 },
-  ];
-  const [userData, setUserData] = useState<User[]>([]);
 
+const data = ["1", "2", "3", "4"];
+
+export const colourOptions = [
+  { value: "ocean", label: "Cat one", color: "#00B8D9", isFixed: true },
+  { value: "blue", label: "Cat two", color: "#0052CC", isDisabled: false },
+  { value: "purple", label: "Cat three", color: "#5243AA" },
+  { value: "red", label: "Cat four", color: "#FF5630", isFixed: true },
+];
+
+function Form() {
+  const [userData, setUserData] = useState<User[]>([]);
+  const label: any[] = [];
+  const [options] = useState(colourOptions);
+  const [cat, setCat] = useState<string[]>([]);
+  let newDataArray: any[] = [];
   const [user, setUser] = useState<User>({
     firstName: "",
     lastName: "",
@@ -30,11 +42,12 @@ function Form() {
     gender: "",
     category: [],
   });
+
   useEffect(() => {
     setUserData(getUserData());
     //  console.log(userData);
   }, []);
-  const [options] = useState(data);
+
   function handleChangeFname(event: any) {
     setUser((prev) => ({ ...prev, firstName: event.target.value }));
   }
@@ -62,16 +75,27 @@ function Form() {
     } else console.log("no");
   }
 
+  const onChange = (selectedOptions: any) => {
+    console.log("sel", selectedOptions);
+    //label = selectedOptions;
+    newDataArray = [...user.category, ...selectedOptions];
+    //console.log("new", newDataArray);
+    setUser((prev) => ({
+      ...prev,
+      category: selectedOptions.map((d: { label: any }) => d.label),
+    }));
+    //console.log("usr", user);
+  };
+
   function Submit(event: any) {
     event.preventDefault();
 
-    console.log(userData);
+    // console.log(userData);
     addUser(user);
-    console.log(user);
+    console.log(newDataArray);
 
     setUserData([...userData, user]);
-    console.log(userData);
-
+    console.log("fin", userData);
     setUser({
       firstName: "",
       lastName: "",
@@ -140,25 +164,13 @@ function Form() {
 
               <div className="form-group mt-3">
                 <label>Category</label>
-                <Multiselect
+                <Select
+                  isMulti
+                  name="colors"
                   options={options}
-                  displayValue="name"
-                  selectedValues={user.category}
-                  onSelect={(selectedList, selectedItem) => {
-                    console.log(userData, selectedList);
-                    setUser((prev) => ({
-                      ...prev,
-                      category: selectedList,
-                    }));
-                  }}
-                  onRemove={(selectedList, selectedItem) => {
-                    console.log(userData, selectedList);
-                    setUser((prev) => ({
-                      ...prev,
-                      category: selectedList,
-                    }));
-                  }}
-                ></Multiselect>
+                  classNamePrefix="select"
+                  onChange={onChange}
+                />
               </div>
 
               <div className="form-group mt-3">
