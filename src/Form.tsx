@@ -32,7 +32,6 @@ function Form() {
   const [userData, setUserData] = useState<User[]>([]);
   const label: any[] = [];
   const [options] = useState(colourOptions);
-  const [cat, setCat] = useState<string[]>([]);
   const newDataArray: any[] = [];
   const [user, setUser] = useState<User>({
     firstName: "",
@@ -251,15 +250,15 @@ function Form() {
                       <TableCell align="right">{row.gender}</TableCell>
                       <TableCell align="right">{row.emailAddress}</TableCell>
                       <TableCell align="right">{row.phone}</TableCell>
-                      <TableCell align="right">{row.category.length}</TableCell>
+                      
                     </TableRow>
-                    {/* {row.category.map((cat) => (
+                    {row.category.map((cat) => (
                       <TableRow>
                         <TableCell align="right">
-                          {Array.isArray(cat)}
+                          {cat}
                         </TableCell>
                       </TableRow>
-                    ))} */}
+                    ))}
                   </Fragment>
                 ))}
               </TableBody>
