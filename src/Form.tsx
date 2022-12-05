@@ -33,7 +33,7 @@ function Form() {
   const label: any[] = [];
   const [options] = useState(colourOptions);
   const [cat, setCat] = useState<string[]>([]);
-  let newDataArray: any[] = [];
+  const newDataArray: any[] = [];
   const [user, setUser] = useState<User>({
     firstName: "",
     lastName: "",
@@ -78,8 +78,8 @@ function Form() {
   const onChange = (selectedOptions: any) => {
     console.log("sel", selectedOptions);
     //label = selectedOptions;
-    newDataArray = [...user.category, ...selectedOptions];
-    //console.log("new", newDataArray);
+    //newDataArray = [...user.category, ...selectedOptions];
+    console.log("new", newDataArray);
     setUser((prev) => ({
       ...prev,
       category: selectedOptions.map((d: { label: any }) => d.label),
@@ -92,7 +92,7 @@ function Form() {
 
     // console.log(userData);
     addUser(user);
-    console.log(newDataArray);
+    console.log(user);
 
     setUserData([...userData, user]);
     console.log("fin", userData);
