@@ -19,7 +19,7 @@ function Form() {
     { name: "Cat three", id: 3 },
     { name: "Cat four", id: 4 },
   ];
-  const [userData, setUserData] = useState<User[]>();
+  const [userData, setUserData] = useState<User[]>([]);
 
   const [user, setUser] = useState<User>({
     firstName: "",
@@ -64,10 +64,8 @@ function Form() {
   }
 
   function Submit() {
-    console.log(user);
     addUser(user);
-    setUserData(getUserData());
-    console.log(getUserData());
+    setUserData([...userData, user]);
   }
 
   return (
