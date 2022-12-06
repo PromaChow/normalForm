@@ -12,6 +12,7 @@ import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import SearchComponent from "react-material-ui-searchbar";
 import { Valid } from "./model-files/validation";
+import { useFormik, FormikProps } from "formik";
 
 import Select from "react-select";
 
@@ -25,6 +26,37 @@ export const colourOptions: any = [
 ];
 
 function Form() {
+  let userInitial: User = {
+    firstName: "",
+    lastName: "",
+    emailAddress: "",
+    phone: "",
+    gender: "",
+    category: [],
+  };
+
+  const {
+    values,
+    errors,
+    touched,
+    handleBlur,
+    handleChange,
+    handleSubmit,
+  }: FormikProps<User> = useFormik<User>({
+    initialValues: userInitial,
+    onSubmit: (values, action) => {
+      console.log(
+        "🚀 ~ file: Registration.jsx ~ line 11 ~ Registration ~ values",
+        values
+      );
+      action.resetForm();
+    },
+  });
+  console.log(
+    "🚀 ~ file: Registration.jsx ~ line 25 ~ Registration ~ errors",
+    errors
+  );
+
   const [userData, setUserData] = useState<User[]>([]);
   const [rows, setRows] = useState<User[]>([]);
   const [options] = useState(colourOptions);
@@ -53,95 +85,95 @@ function Form() {
     setRows([...userData]);
   }, []);
 
-  function handleChangeFname(event: any) {
-    setUser((prev) => ({ ...prev, firstName: event.target.value }));
-    if (event.target.value) {
-      validationData.current.firstNameValid = true;
-      checkAllValidationTrue();
-    }
-  }
+  // function handleChangeFname(event: any) {
+  //   setUser((prev) => ({ ...prev, firstName: event.target.value }));
+  //   if (event.target.value) {
+  //     validationData.current.firstNameValid = true;
+  //     checkAllValidationTrue();
+  //   }
+  // }
 
-  function handleChangeLname(event: any) {
-    setUser((prev) => ({ ...prev, lastName: event.target.value }));
-    if (event.target.value) {
-      validationData.current.lastNameValid = true;
-      checkAllValidationTrue();
-    }
-  }
+  // function handleChangeLname(event: any) {
+  //   setUser((prev) => ({ ...prev, lastName: event.target.value }));
+  //   if (event.target.value) {
+  //     validationData.current.lastNameValid = true;
+  //     checkAllValidationTrue();
+  //   }
+  // }
 
-  function handleChangePhone(event: any) {
-    var phoneno = /^(?:(?:\+|00)88|01)?\d{11}$/;
-    setUser((prev) => ({ ...prev, phone: event.target.value }));
-    if (event.target.value.match(phoneno)) {
-      if (event.target.value) {
-        validationData.current.phoneValid = true;
-        checkAllValidationTrue();
-      }
-      console.log("yes");
-    } else {
-      console.log("no");
-    }
-  }
+  // function handleChangePhone(event: any) {
+  //   var phoneno = /^(?:(?:\+|00)88|01)?\d{11}$/;
+  //   setUser((prev) => ({ ...prev, phone: event.target.value }));
+  //   if (event.target.value.match(phoneno)) {
+  //     if (event.target.value) {
+  //       validationData.current.phoneValid = true;
+  //       checkAllValidationTrue();
+  //     }
+  //     console.log("yes");
+  //   } else {
+  //     console.log("no");
+  //   }
+  // }
 
-  function handleChangeGender(event: any) {
-    setUser((prev) => ({ ...prev, gender: event.target.value }));
-    setChecked(event.target.value);
-    if (event.target.value) {
-      validationData.current.genderValid = true;
-      checkAllValidationTrue();
-    }
-    console.log(user);
-  }
+  // function handleChangeGender(event: any) {
+  //   setUser((prev) => ({ ...prev, gender: event.target.value }));
+  //   setChecked(event.target.value);
+  //   if (event.target.value) {
+  //     validationData.current.genderValid = true;
+  //     checkAllValidationTrue();
+  //   }
+  //   console.log(user);
+  // }
 
-  function handleChangeEmail(event: any) {
-    setUser((prev) => ({ ...prev, emailAddress: event.target.value }));
-    if (validator.isEmail(event.target.value)) {
-      validationData.current.emailAddressValid = true;
-      checkAllValidationTrue();
-    }
-  }
+  // function handleChangeEmail(event: any) {
+  //   setUser((prev) => ({ ...prev, emailAddress: event.target.value }));
+  //   if (validator.isEmail(event.target.value)) {
+  //     validationData.current.emailAddressValid = true;
+  //     checkAllValidationTrue();
+  //   }
+  // }
 
-  const onChange = (selectedOptions: any) => {
-    // console.log("sel", selectedOptions);
-    setSelected(selectedOptions);
+  // const onChange = (selectedOptions: any) => {
+  //   // console.log("sel", selectedOptions);
+  //   setSelected(selectedOptions);
 
-    setUser((prev) => ({
-      ...prev,
-      category: selectedOptions.map((d: { label: any }) => d.label),
-    }));
-    if (selectedOptions.length > 0) {
-      validationData.current.categoryValid = true;
-      checkAllValidationTrue();
-    }
-  };
+  //   setUser((prev) => ({
+  //     ...prev,
+  //     category: selectedOptions.map((d: { label: any }) => d.label),
+  //   }));
+  //   if (selectedOptions.length > 0) {
+  //     validationData.current.categoryValid = true;
+  //     checkAllValidationTrue();
+  //   }
+  // };
 
-  function Submit(event: any) {
-    event.preventDefault();
+  // function Submit(event: any) {
+  //   event.preventDefault();
 
-    addUser(user);
-    console.log(user);
+  //   addUser(user);
+  //   console.log(user);
 
-    setUserData([...userData, user]);
-    setRows([...userData, user]);
-    setSelected([]);
-    setChecked("");
-    console.log("fin", userData);
-    setUser({
-      firstName: "",
-      lastName: "",
-      emailAddress: "",
-      phone: "",
-      gender: "",
-      category: [],
-    });
-    validationData.current.firstNameValid = false;
-    validationData.current.lastNameValid = false;
-    validationData.current.emailAddressValid = false;
-    validationData.current.phoneValid = false;
-    validationData.current.genderValid = false;
-    validationData.current.categoryValid = false;
-    allTrue.current = false;
-  }
+  //   setUserData([...userData, user]);
+  //   setRows([...userData, user]);
+  //   setSelected([]);
+  //   setChecked("");
+  //   console.log("fin", userData);
+  //   setUser({
+  //     firstName: "",
+  //     lastName: "",
+  //     emailAddress: "",
+  //     phone: "",
+  //     gender: "",
+  //     category: [],
+  //   });
+  //   validationData.current.firstNameValid = false;
+  //   validationData.current.lastNameValid = false;
+  //   validationData.current.emailAddressValid = false;
+  //   validationData.current.phoneValid = false;
+  //   validationData.current.genderValid = false;
+  //   validationData.current.categoryValid = false;
+  //   allTrue.current = false;
+  // }
 
   function checkAllValidationTrue() {
     let indicator = true;
@@ -177,40 +209,44 @@ function Form() {
                 <label>First Name</label>
                 <input
                   type="text"
-                  value={user.firstName}
+                  name="firstName"
+                  value={values.firstName}
                   className="form-control mt-1"
                   placeholder="Enter First Name"
-                  onChange={handleChangeFname}
+                  onChange={handleChange}
                 />
               </div>
               <div className="form-group mt-3">
                 <label>Last Name</label>
                 <input
                   type="text"
+                  name="lastName"
                   className="form-control mt-1"
-                  value={user.lastName}
+                  value={values.lastName}
                   placeholder="Enter Last Name"
-                  onChange={handleChangeLname}
+                  onChange={handleChange}
                 />
               </div>
               <div className="form-group mt-3">
                 <label>Email address</label>
                 <input
                   type="email"
+                  name="emailAddress"
                   className="form-control mt-1"
-                  value={user.emailAddress}
+                  value={values.emailAddress}
                   placeholder="Enter Email"
-                  onChange={handleChangeEmail}
+                  onChange={handleChange}
                 />
               </div>
               <div className="form-group mt-3">
                 <label>Phone Number</label>
                 <input
                   type="tel"
-                  value={user.phone}
+                  value={values.phone}
+                  name="phone"
                   className="form-control mt-1"
                   placeholder="Enter Phone Number"
-                  onChange={handleChangePhone}
+                  onChange={handleChange}
                 />
               </div>
 
@@ -218,11 +254,14 @@ function Form() {
                 <label>Category</label>
                 <Select
                   isMulti
-                  name="colors"
+                  name="category"
                   options={options}
                   classNamePrefix="select"
-                  onChange={onChange}
-                  value={selected}
+                  onChange={(selectedOption) => {
+                    // This inline function can now completely be reaplce by handleChange("year")
+                    handleChange("category");
+                  }}
+                  value={values.category}
                 />
               </div>
 
@@ -233,8 +272,7 @@ function Form() {
                   value="Male"
                   name="gender"
                   style={{ marginLeft: 10 }}
-                  onChange={handleChangeGender}
-                  checked={checked === "Male"}
+                  onChange={handleChange}
                 />{" "}
                 Male
                 <input
@@ -242,7 +280,7 @@ function Form() {
                   value="Female"
                   name="gender"
                   style={{ marginLeft: 10 }}
-                  onChange={handleChangeGender}
+                  onChange={handleChange}
                   checked={checked === "Female"}
                 />{" "}
                 Female
@@ -251,19 +289,14 @@ function Form() {
                   value="Other"
                   name="gender"
                   style={{ marginLeft: 10 }}
-                  onChange={handleChangeGender}
+                  onChange={handleChange}
                   checked={checked === "Other"}
                 />{" "}
                 Other
               </div>
 
               <div className="d-grid gap-2 mt-3">
-                <button
-                  type="submit"
-                  className="btn btn-primary"
-                  disabled={allTrue.current ? false : true}
-                  onClick={Submit}
-                >
+                <button type="submit" className="btn btn-primary">
                   Submit
                 </button>
               </div>
