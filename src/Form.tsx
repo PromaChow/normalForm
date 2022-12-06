@@ -11,12 +11,11 @@ import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import SearchComponent from "react-material-ui-searchbar";
+import { Valid } from "./model-files/validation";
 
 import Select from "react-select";
 
 var validator = require("validator");
-
-const data = ["1", "2", "3", "4"];
 
 export const colourOptions: any = [
   { value: "ocean", label: "Cat one", color: "#00B8D9", isFixed: true },
@@ -28,10 +27,19 @@ export const colourOptions: any = [
 function Form() {
   const [userData, setUserData] = useState<User[]>([]);
   const [rows, setRows] = useState<User[]>([]);
-  const save = useRef<User[]>(userData);
   const [options] = useState(colourOptions);
-  const newDataArray: any[] = [];
   const [selected, setSelected] = useState<any>([]);
+  const allTrue = useRef(false);
+  const [checked, setChecked] = useState("");
+  const validationData = useRef<Valid>({
+    firstNameValid: false,
+    lastNameValid: false,
+    emailAddressValid: false,
+    phoneValid: false,
+    genderValid: false,
+    categoryValid: false,
+  });
+
   const [user, setUser] = useState<User>({
     firstName: "",
     lastName: "",
@@ -43,22 +51,32 @@ function Form() {
 
   useEffect(() => {
     setRows([...userData]);
-    //save.current = [...userData];
-    //  console.log(userData);
   }, []);
 
   function handleChangeFname(event: any) {
     setUser((prev) => ({ ...prev, firstName: event.target.value }));
+    if (event.target.value) {
+      validationData.current.firstNameValid = true;
+      checkAllValidationTrue();
+    }
   }
 
   function handleChangeLname(event: any) {
     setUser((prev) => ({ ...prev, lastName: event.target.value }));
+    if (event.target.value) {
+      validationData.current.lastNameValid = true;
+      checkAllValidationTrue();
+    }
   }
 
   function handleChangePhone(event: any) {
     var phoneno = /^(?:(?:\+|00)88|01)?\d{11}$/;
+    setUser((prev) => ({ ...prev, phone: event.target.value }));
     if (event.target.value.match(phoneno)) {
-      setUser((prev) => ({ ...prev, phone: event.target.value }));
+      if (event.target.value) {
+        validationData.current.phoneValid = true;
+        checkAllValidationTrue();
+      }
       console.log("yes");
     } else {
       console.log("no");
@@ -67,33 +85,46 @@ function Form() {
 
   function handleChangeGender(event: any) {
     setUser((prev) => ({ ...prev, gender: event.target.value }));
+    setChecked(event.target.value);
+    if (event.target.value) {
+      validationData.current.genderValid = true;
+      checkAllValidationTrue();
+    }
+    console.log(user);
   }
+
   function handleChangeEmail(event: any) {
+    setUser((prev) => ({ ...prev, emailAddress: event.target.value }));
     if (validator.isEmail(event.target.value)) {
-      setUser((prev) => ({ ...prev, emailAddress: event.target.value }));
-    } else console.log("no");
+      validationData.current.emailAddressValid = true;
+      checkAllValidationTrue();
+    }
   }
 
   const onChange = (selectedOptions: any) => {
-    console.log("sel", selectedOptions);
+    // console.log("sel", selectedOptions);
     setSelected(selectedOptions);
-    console.log("new", newDataArray);
+
     setUser((prev) => ({
       ...prev,
       category: selectedOptions.map((d: { label: any }) => d.label),
     }));
+    if (selectedOptions.length > 0) {
+      validationData.current.categoryValid = true;
+      checkAllValidationTrue();
+    }
   };
 
   function Submit(event: any) {
     event.preventDefault();
 
-    // console.log(userData);
     addUser(user);
     console.log(user);
 
     setUserData([...userData, user]);
     setRows([...userData, user]);
     setSelected([]);
+    setChecked("");
     console.log("fin", userData);
     setUser({
       firstName: "",
@@ -103,6 +134,28 @@ function Form() {
       gender: "",
       category: [],
     });
+    validationData.current.firstNameValid = false;
+    validationData.current.lastNameValid = false;
+    validationData.current.emailAddressValid = false;
+    validationData.current.phoneValid = false;
+    validationData.current.genderValid = false;
+    validationData.current.categoryValid = false;
+    allTrue.current = false;
+  }
+
+  function checkAllValidationTrue() {
+    let indicator = true;
+    console.log(validationData);
+    if (
+      validationData.current.firstNameValid === true &&
+      validationData.current.lastNameValid === true &&
+      validationData.current.emailAddressValid === true &&
+      validationData.current.phoneValid === true &&
+      validationData.current.genderValid === true &&
+      validationData.current.categoryValid === true
+    ) {
+      allTrue.current = true;
+    }
   }
 
   return (
@@ -181,6 +234,7 @@ function Form() {
                   name="gender"
                   style={{ marginLeft: 10 }}
                   onChange={handleChangeGender}
+                  checked={checked === "Male"}
                 />{" "}
                 Male
                 <input
@@ -189,6 +243,7 @@ function Form() {
                   name="gender"
                   style={{ marginLeft: 10 }}
                   onChange={handleChangeGender}
+                  checked={checked === "Female"}
                 />{" "}
                 Female
                 <input
@@ -197,6 +252,7 @@ function Form() {
                   name="gender"
                   style={{ marginLeft: 10 }}
                   onChange={handleChangeGender}
+                  checked={checked === "Other"}
                 />{" "}
                 Other
               </div>
@@ -205,6 +261,7 @@ function Form() {
                 <button
                   type="submit"
                   className="btn btn-primary"
+                  disabled={allTrue.current ? false : true}
                   onClick={Submit}
                 >
                   Submit
@@ -231,8 +288,6 @@ function Form() {
                   .includes(searchedVal.toLowerCase());
               });
               setRows([...filteredRows]);
-              save.current = [...filteredRows];
-              console.log(save.current);
             }}
           />
           <TableContainer component={Paper}>
