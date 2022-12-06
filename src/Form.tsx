@@ -12,17 +12,13 @@ import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import SearchComponent from "react-material-ui-searchbar";
 
-import { default as ReactSelect } from "react-select";
 import Select from "react-select";
-
-import { components } from "react-select";
-import { SocialDistanceOutlined } from "@mui/icons-material";
 
 var validator = require("validator");
 
 const data = ["1", "2", "3", "4"];
 
-export const colourOptions = [
+export const colourOptions: any = [
   { value: "ocean", label: "Cat one", color: "#00B8D9", isFixed: true },
   { value: "blue", label: "Cat two", color: "#0052CC", isDisabled: false },
   { value: "purple", label: "Cat three", color: "#5243AA" },
@@ -31,12 +27,11 @@ export const colourOptions = [
 
 function Form() {
   const [userData, setUserData] = useState<User[]>([]);
-  const [searched, setSearched] = useState<string>("");
   const [rows, setRows] = useState<User[]>([]);
-  const label: any[] = [];
   const save = useRef<User[]>(userData);
   const [options] = useState(colourOptions);
   const newDataArray: any[] = [];
+  const [selected, setSelected] = useState<any>([]);
   const [user, setUser] = useState<User>({
     firstName: "",
     lastName: "",
@@ -81,14 +76,12 @@ function Form() {
 
   const onChange = (selectedOptions: any) => {
     console.log("sel", selectedOptions);
-    //label = selectedOptions;
-    //newDataArray = [...user.category, ...selectedOptions];
+    setSelected(selectedOptions);
     console.log("new", newDataArray);
     setUser((prev) => ({
       ...prev,
       category: selectedOptions.map((d: { label: any }) => d.label),
     }));
-    //console.log("usr", user);
   };
 
   function Submit(event: any) {
@@ -100,7 +93,7 @@ function Form() {
 
     setUserData([...userData, user]);
     setRows([...userData, user]);
-
+    setSelected([]);
     console.log("fin", userData);
     setUser({
       firstName: "",
@@ -176,6 +169,7 @@ function Form() {
                   options={options}
                   classNamePrefix="select"
                   onChange={onChange}
+                  value={selected}
                 />
               </div>
 
