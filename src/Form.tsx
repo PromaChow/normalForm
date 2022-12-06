@@ -48,9 +48,9 @@ function Form() {
 
   useEffect(() => {
     setRows([...userData]);
-    save.current = [...userData];
+    //save.current = [...userData];
     //  console.log(userData);
-  }, [rows]); 
+  }, []);
 
   function handleChangeFname(event: any) {
     setUser((prev) => ({ ...prev, firstName: event.target.value }));
@@ -99,7 +99,8 @@ function Form() {
     console.log(user);
 
     setUserData([...userData, user]);
-    
+    setRows([...userData, user]);
+
     console.log("fin", userData);
     setUser({
       firstName: "",
@@ -110,9 +111,6 @@ function Form() {
       category: [],
     });
   }
-
-
-
 
   return (
     <div className="row overflow-auto">
@@ -222,7 +220,7 @@ function Form() {
           </form>
         </div>
       </div>
-      <div className="col-8">
+      <div className="col-7">
         <div
           className="container-fluid"
           style={{
@@ -231,16 +229,18 @@ function Form() {
             margin: "10px",
           }}
         >
-            <SearchComponent onChangeHandle={(searchedVal:string)=>{
-               let filteredRows = userData.filter((row) => {
-                return row.firstName.toLowerCase().includes(searchedVal.toLowerCase());
+          <SearchComponent
+            onChangeHandle={(searchedVal: string) => {
+              let filteredRows = userData.filter((row) => {
+                return row.firstName
+                  .toLowerCase()
+                  .includes(searchedVal.toLowerCase());
               });
               setRows([...filteredRows]);
               save.current = [...filteredRows];
               console.log(save.current);
-             
-             
-            }} />
+            }}
+          />
           <TableContainer component={Paper}>
             <Table
               sx={{ minWidth: 650 }}
@@ -248,31 +248,33 @@ function Form() {
               aria-label="a dense table"
             >
               <TableHead>
-                <TableRow  sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
+                <TableRow
+                  sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
+                >
                   <TableCell align="left">First Name</TableCell>
                   <TableCell align="left">Last Name</TableCell>
                   <TableCell align="left">Gender</TableCell>
                   <TableCell align="left">Email Address</TableCell>
                   <TableCell align="left">Phone Number</TableCell>
                   <TableCell align="left">Category</TableCell>
-                  
                 </TableRow>
               </TableHead>
 
               <TableBody>
-                {save.current.map((row, k) => (
+                {rows.map((row, k) => (
                   <Fragment>
                     <TableRow key={k++}>
                       <TableCell component="th" scope="row">
                         {row.firstName}
                       </TableCell>
-                      <TableCell align="left" >{row.lastName}</TableCell>
-                      <TableCell align="left" >{row.gender}</TableCell>
-                      <TableCell align="left" >{row.emailAddress}</TableCell>
-                      <TableCell align="left" >{row.phone}</TableCell>
-                      <TableCell align="left" >{row.category.join(",")}</TableCell>
+                      <TableCell align="left">{row.lastName}</TableCell>
+                      <TableCell align="left">{row.gender}</TableCell>
+                      <TableCell align="left">{row.emailAddress}</TableCell>
+                      <TableCell align="left">{row.phone}</TableCell>
+                      <TableCell align="left">
+                        {row.category.join(",")}
+                      </TableCell>
                     </TableRow>
-                   
                   </Fragment>
                 ))}
               </TableBody>
