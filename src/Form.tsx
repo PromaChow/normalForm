@@ -202,7 +202,9 @@ function Form() {
                   onBlur={formik.handleBlur}
                 />
                 {formik.errors.firstName && formik.touched.firstName ? (
-                  <div className="error">{formik.errors.firstName}</div>
+                  <div className="alert alert-danger alert-dismissible fade show">
+                    {formik.errors.firstName}
+                  </div>
                 ) : null}
               </div>
               <div className="form-group mt-3">
@@ -217,7 +219,9 @@ function Form() {
                   onBlur={formik.handleBlur}
                 />
                 {formik.errors.lastName && formik.touched.lastName ? (
-                  <div className="error">{formik.errors.lastName}</div>
+                  <div className="alert alert-danger alert-dismissible fade show">
+                    {formik.errors.lastName}
+                  </div>
                 ) : null}
               </div>
               <div className="form-group mt-3">
@@ -232,7 +236,9 @@ function Form() {
                   onBlur={formik.handleBlur}
                 />
                 {formik.errors.emailAddress && formik.touched.emailAddress ? (
-                  <div className="error">{formik.errors.emailAddress}</div>
+                  <div className="alert alert-danger alert-dismissible fade show">
+                    {formik.errors.emailAddress}
+                  </div>
                 ) : null}
               </div>
               <div className="form-group mt-3">
@@ -247,7 +253,9 @@ function Form() {
                   onBlur={formik.handleBlur}
                 />
                 {formik.errors.phone && formik.touched.phone ? (
-                  <div className="error">{formik.errors.phone}</div>
+                  <div className="alert alert-danger alert-dismissible fade show">
+                    {formik.errors.phone}
+                  </div>
                 ) : null}
               </div>
 
@@ -263,10 +271,14 @@ function Form() {
                   }}
                   value={formik.values.category}
                   options={options}
-                  onBlur={formik.handleBlur}
+                  onBlur={() => {
+                    formik.setFieldTouched("category");
+                  }}
                 />
                 {formik.errors.category && formik.touched.category ? (
-                  <div className="error">{formik.errors.category}</div>
+                  <div className="alert alert-danger alert-dismissible fade show">
+                    {formik.errors.category}
+                  </div>
                 ) : null}
               </div>
 
