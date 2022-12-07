@@ -14,7 +14,7 @@ import SearchComponent from "react-material-ui-searchbar";
 import { CustomSelect } from "./CustomSelect";
 import { Valid } from "./model-files/validation";
 import { useFormik, FormikProps } from "formik";
-
+import { formSchema } from "./schemas/userValidation";
 import Select from "react-select";
 
 var validator = require("validator");
@@ -41,6 +41,7 @@ function Form() {
 
   const formik: FormikProps<User> = useFormik<User>({
     initialValues: user,
+    validationSchema: formSchema,
     onSubmit: (values, action) => {
       console.log(
         " ~ file: Registration.jsx ~ line 11 ~ Registration ~ values",
@@ -48,7 +49,16 @@ function Form() {
       );
       setUserData([...userData, values]);
       setRows([...userData, values]);
-      action.resetForm();
+      action.resetForm({
+        values: {
+          firstName: "",
+          lastName: "",
+          emailAddress: "",
+          phone: "",
+          gender: "",
+          category: [],
+        },
+      });
     },
   });
   console.log(
@@ -189,7 +199,11 @@ function Form() {
                   className="form-control mt-1"
                   placeholder="Enter First Name"
                   onChange={formik.handleChange}
+                  onBlur={formik.handleBlur}
                 />
+                {formik.errors.firstName && formik.touched.firstName ? (
+                  <div className="error">{formik.errors.firstName}</div>
+                ) : null}
               </div>
               <div className="form-group mt-3">
                 <label>Last Name</label>
@@ -200,7 +214,11 @@ function Form() {
                   value={formik.values.lastName}
                   placeholder="Enter Last Name"
                   onChange={formik.handleChange}
+                  onBlur={formik.handleBlur}
                 />
+                {formik.errors.lastName && formik.touched.lastName ? (
+                  <div className="error">{formik.errors.lastName}</div>
+                ) : null}
               </div>
               <div className="form-group mt-3">
                 <label>Email address</label>
@@ -211,7 +229,11 @@ function Form() {
                   value={formik.values.emailAddress}
                   placeholder="Enter Email"
                   onChange={formik.handleChange}
+                  onBlur={formik.handleBlur}
                 />
+                {formik.errors.emailAddress && formik.touched.emailAddress ? (
+                  <div className="error">{formik.errors.emailAddress}</div>
+                ) : null}
               </div>
               <div className="form-group mt-3">
                 <label>Phone Number</label>
@@ -222,7 +244,11 @@ function Form() {
                   className="form-control mt-1"
                   placeholder="Enter Phone Number"
                   onChange={formik.handleChange}
+                  onBlur={formik.handleBlur}
                 />
+                {formik.errors.phone && formik.touched.phone ? (
+                  <div className="error">{formik.errors.phone}</div>
+                ) : null}
               </div>
 
               <div className="form-group mt-3">
@@ -237,7 +263,11 @@ function Form() {
                   }}
                   value={formik.values.category}
                   options={options}
+                  onBlur={formik.handleBlur}
                 />
+                {formik.errors.category && formik.touched.category ? (
+                  <div className="error">{formik.errors.category}</div>
+                ) : null}
               </div>
 
               <div className="form-group mt-3">
@@ -248,6 +278,7 @@ function Form() {
                   name="gender"
                   style={{ marginLeft: 10 }}
                   onChange={formik.handleChange}
+                  onBlur={formik.handleBlur}
                 />{" "}
                 Male
                 <input
@@ -267,6 +298,9 @@ function Form() {
                 />{" "}
                 Other
               </div>
+              {formik.errors.gender && formik.touched.gender ? (
+                <div className="error">{formik.errors.gender}</div>
+              ) : null}
 
               <div className="d-grid gap-2 mt-3">
                 <button type="submit" className="btn btn-primary">

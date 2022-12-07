@@ -8,6 +8,11 @@
   width: 100vw;
   height: 100vh;
 }
+.error {
+  font-size: 12px;
+  color: rgb(230, 75, 88);
+  margin-bottom: 10px;
+}
 
 .Auth-form {
   width: 420px;
