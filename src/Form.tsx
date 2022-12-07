@@ -15,6 +15,7 @@ import { CustomSelect } from "./CustomSelect";
 import { Valid } from "./model-files/validation";
 import { useFormik, FormikProps } from "formik";
 import { formSchema } from "./schemas/userValidation";
+import MuiSelect from "./MuiSelect";
 import Select from "react-select";
 
 var validator = require("validator");
@@ -43,10 +44,7 @@ function Form() {
     initialValues: user,
     validationSchema: formSchema,
     onSubmit: (values, action) => {
-      console.log(
-        " ~ file: Registration.jsx ~ line 11 ~ Registration ~ values",
-        values
-      );
+      console.log(values);
       setUserData([...userData, values]);
       setRows([...userData, values]);
       action.resetForm({
@@ -61,119 +59,10 @@ function Form() {
       });
     },
   });
-  console.log(
-    " ~ file: Registration.jsx ~ line 25 ~ Registration ~ errors",
-    formik.errors
-  );
 
   useEffect(() => {
     setRows([...userData]);
   }, []);
-
-  // // function handleChangeFname(event: any) {
-  // //   setUser((prev) => ({ ...prev, firstName: event.target.value }));
-  // //   if (event.target.value) {
-  // //     validationData.current.firstNameValid = true;
-  // //     checkAllValidationTrue();
-  // //   }
-  // // }
-
-  // // function handleChangeLname(event: any) {
-  // //   setUser((prev) => ({ ...prev, lastName: event.target.value }));
-  // //   if (event.target.value) {
-  // //     validationData.current.lastNameValid = true;
-  // //     checkAllValidationTrue();
-  // //   }
-  // // }
-
-  // // function handleChangePhone(event: any) {
-  // //   var phoneno = /^(?:(?:\+|00)88|01)?\d{11}$/;
-  // //   setUser((prev) => ({ ...prev, phone: event.target.value }));
-  // //   if (event.target.value.match(phoneno)) {
-  // //     if (event.target.value) {
-  // //       validationData.current.phoneValid = true;
-  // //       checkAllValidationTrue();
-  // //     }
-  // //     console.log("yes");
-  // //   } else {
-  // //     console.log("no");
-  // //   }
-  // // }
-
-  // // function handleChangeGender(event: any) {
-  // //   setUser((prev) => ({ ...prev, gender: event.target.value }));
-  // //   setChecked(event.target.value);
-  // //   if (event.target.value) {
-  // //     validationData.current.genderValid = true;
-  // //     checkAllValidationTrue();
-  // //   }
-  // //   console.log(user);
-  // // }
-
-  // // function handleChangeEmail(event: any) {
-  // //   setUser((prev) => ({ ...prev, emailAddress: event.target.value }));
-  // //   if (validator.isEmail(event.target.value)) {
-  // //     validationData.current.emailAddressValid = true;
-  // //     checkAllValidationTrue();
-  // //   }
-  // // }
-
-  // // const onChange = (selectedOptions: any) => {
-  // //   // console.log("sel", selectedOptions);
-  // //   setSelected(selectedOptions);
-
-  // //   setUser((prev) => ({
-  // //     ...prev,
-  // //     category: selectedOptions.map((d: { label: any }) => d.label),
-  // //   }));
-  // //   if (selectedOptions.length > 0) {
-  // //     validationData.current.categoryValid = true;
-  // //     checkAllValidationTrue();
-  // //   }
-  // // };
-
-  // // function Submit(event: any) {
-  // //   event.preventDefault();
-
-  // //   addUser(user);
-  // //   console.log(user);
-
-  // //   setUserData([...userData, user]);
-  // //   setRows([...userData, user]);
-  // //   setSelected([]);
-  // //   setChecked("");
-  // //   console.log("fin", userData);
-  // //   setUser({
-  // //     firstName: "",
-  // //     lastName: "",
-  // //     emailAddress: "",
-  // //     phone: "",
-  // //     gender: "",
-  // //     category: [],
-  // //   });
-  // //   validationData.current.firstNameValid = false;
-  // //   validationData.current.lastNameValid = false;
-  // //   validationData.current.emailAddressValid = false;
-  // //   validationData.current.phoneValid = false;
-  // //   validationData.current.genderValid = false;
-  // //   validationData.current.categoryValid = false;
-  // //   allTrue.current = false;
-  // // }
-
-  // function checkAllValidationTrue() {
-  //   let indicator = true;
-  //   console.log(validationData);
-  //   if (
-  //     validationData.current.firstNameValid === true &&
-  //     validationData.current.lastNameValid === true &&
-  //     validationData.current.emailAddressValid === true &&
-  //     validationData.current.phoneValid === true &&
-  //     validationData.current.genderValid === true &&
-  //     validationData.current.categoryValid === true
-  //   ) {
-  //     allTrue.current = true;
-  //   }
-  // }
 
   return (
     <div className="row overflow-auto">
@@ -259,7 +148,7 @@ function Form() {
                 ) : null}
               </div>
 
-              <div className="form-group mt-3">
+              {/* <div className="form-group mt-3">
                 <label>Category</label>
                 <CustomSelect
                   onChange={(value: any) => {
@@ -271,6 +160,28 @@ function Form() {
                   }}
                   value={formik.values.category}
                   options={options}
+                  onBlur={() => {
+                    formik.setFieldTouched("category");
+                  }}
+                />
+                {formik.errors.category && formik.touched.category ? (
+                  <div className="alert alert-danger alert-dismissible fade show">
+                    {formik.errors.category}
+                  </div>
+                ) : null}
+              </div> */}
+              <div className="form-group mt-3">
+                <label>Category</label>
+                <MuiSelect
+                  onChange={(value: any) => {
+                    console.log("hrllo", value.target.value);
+                    if (value.target.value) {
+                      formik.setFieldValue("category", value.target.value);
+                    } else {
+                      formik.setFieldValue("category", []);
+                    }
+                  }}
+                  value={formik.values.category}
                   onBlur={() => {
                     formik.setFieldTouched("category");
                   }}
@@ -311,7 +222,9 @@ function Form() {
                 Other
               </div>
               {formik.errors.gender && formik.touched.gender ? (
-                <div className="error">{formik.errors.gender}</div>
+                <div className="alert alert-danger alert-dismissible fade show">
+                  {formik.errors.gender}
+                </div>
               ) : null}
 
               <div className="d-grid gap-2 mt-3">
