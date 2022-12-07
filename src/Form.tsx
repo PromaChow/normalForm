@@ -11,6 +11,7 @@ import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import SearchComponent from "react-material-ui-searchbar";
+import { CustomSelect } from "./CustomSelect";
 import { Valid } from "./model-files/validation";
 import { useFormik, FormikProps } from "formik";
 
@@ -26,7 +27,10 @@ export const colourOptions: any = [
 ];
 
 function Form() {
-  let userInitial: User = {
+  const [userData, setUserData] = useState<User[]>([]);
+  const [rows, setRows] = useState<User[]>([]);
+  const [options] = useState(colourOptions);
+  let user: User = {
     firstName: "",
     lastName: "",
     emailAddress: "",
@@ -35,160 +39,131 @@ function Form() {
     category: [],
   };
 
-  const {
-    values,
-    errors,
-    touched,
-    handleBlur,
-    handleChange,
-    handleSubmit,
-  }: FormikProps<User> = useFormik<User>({
-    initialValues: userInitial,
+  const formik: FormikProps<User> = useFormik<User>({
+    initialValues: user,
     onSubmit: (values, action) => {
       console.log(
-        "🚀 ~ file: Registration.jsx ~ line 11 ~ Registration ~ values",
+        " ~ file: Registration.jsx ~ line 11 ~ Registration ~ values",
         values
       );
+      setUserData([...userData, values]);
+      setRows([...userData, values]);
       action.resetForm();
     },
   });
   console.log(
-    "🚀 ~ file: Registration.jsx ~ line 25 ~ Registration ~ errors",
-    errors
+    " ~ file: Registration.jsx ~ line 25 ~ Registration ~ errors",
+    formik.errors
   );
-
-  const [userData, setUserData] = useState<User[]>([]);
-  const [rows, setRows] = useState<User[]>([]);
-  const [options] = useState(colourOptions);
-  const [selected, setSelected] = useState<any>([]);
-  const allTrue = useRef(false);
-  const [checked, setChecked] = useState("");
-  const validationData = useRef<Valid>({
-    firstNameValid: false,
-    lastNameValid: false,
-    emailAddressValid: false,
-    phoneValid: false,
-    genderValid: false,
-    categoryValid: false,
-  });
-
-  const [user, setUser] = useState<User>({
-    firstName: "",
-    lastName: "",
-    emailAddress: "",
-    phone: "",
-    gender: "",
-    category: [],
-  });
 
   useEffect(() => {
     setRows([...userData]);
   }, []);
 
-  // function handleChangeFname(event: any) {
-  //   setUser((prev) => ({ ...prev, firstName: event.target.value }));
-  //   if (event.target.value) {
-  //     validationData.current.firstNameValid = true;
-  //     checkAllValidationTrue();
+  // // function handleChangeFname(event: any) {
+  // //   setUser((prev) => ({ ...prev, firstName: event.target.value }));
+  // //   if (event.target.value) {
+  // //     validationData.current.firstNameValid = true;
+  // //     checkAllValidationTrue();
+  // //   }
+  // // }
+
+  // // function handleChangeLname(event: any) {
+  // //   setUser((prev) => ({ ...prev, lastName: event.target.value }));
+  // //   if (event.target.value) {
+  // //     validationData.current.lastNameValid = true;
+  // //     checkAllValidationTrue();
+  // //   }
+  // // }
+
+  // // function handleChangePhone(event: any) {
+  // //   var phoneno = /^(?:(?:\+|00)88|01)?\d{11}$/;
+  // //   setUser((prev) => ({ ...prev, phone: event.target.value }));
+  // //   if (event.target.value.match(phoneno)) {
+  // //     if (event.target.value) {
+  // //       validationData.current.phoneValid = true;
+  // //       checkAllValidationTrue();
+  // //     }
+  // //     console.log("yes");
+  // //   } else {
+  // //     console.log("no");
+  // //   }
+  // // }
+
+  // // function handleChangeGender(event: any) {
+  // //   setUser((prev) => ({ ...prev, gender: event.target.value }));
+  // //   setChecked(event.target.value);
+  // //   if (event.target.value) {
+  // //     validationData.current.genderValid = true;
+  // //     checkAllValidationTrue();
+  // //   }
+  // //   console.log(user);
+  // // }
+
+  // // function handleChangeEmail(event: any) {
+  // //   setUser((prev) => ({ ...prev, emailAddress: event.target.value }));
+  // //   if (validator.isEmail(event.target.value)) {
+  // //     validationData.current.emailAddressValid = true;
+  // //     checkAllValidationTrue();
+  // //   }
+  // // }
+
+  // // const onChange = (selectedOptions: any) => {
+  // //   // console.log("sel", selectedOptions);
+  // //   setSelected(selectedOptions);
+
+  // //   setUser((prev) => ({
+  // //     ...prev,
+  // //     category: selectedOptions.map((d: { label: any }) => d.label),
+  // //   }));
+  // //   if (selectedOptions.length > 0) {
+  // //     validationData.current.categoryValid = true;
+  // //     checkAllValidationTrue();
+  // //   }
+  // // };
+
+  // // function Submit(event: any) {
+  // //   event.preventDefault();
+
+  // //   addUser(user);
+  // //   console.log(user);
+
+  // //   setUserData([...userData, user]);
+  // //   setRows([...userData, user]);
+  // //   setSelected([]);
+  // //   setChecked("");
+  // //   console.log("fin", userData);
+  // //   setUser({
+  // //     firstName: "",
+  // //     lastName: "",
+  // //     emailAddress: "",
+  // //     phone: "",
+  // //     gender: "",
+  // //     category: [],
+  // //   });
+  // //   validationData.current.firstNameValid = false;
+  // //   validationData.current.lastNameValid = false;
+  // //   validationData.current.emailAddressValid = false;
+  // //   validationData.current.phoneValid = false;
+  // //   validationData.current.genderValid = false;
+  // //   validationData.current.categoryValid = false;
+  // //   allTrue.current = false;
+  // // }
+
+  // function checkAllValidationTrue() {
+  //   let indicator = true;
+  //   console.log(validationData);
+  //   if (
+  //     validationData.current.firstNameValid === true &&
+  //     validationData.current.lastNameValid === true &&
+  //     validationData.current.emailAddressValid === true &&
+  //     validationData.current.phoneValid === true &&
+  //     validationData.current.genderValid === true &&
+  //     validationData.current.categoryValid === true
+  //   ) {
+  //     allTrue.current = true;
   //   }
   // }
-
-  // function handleChangeLname(event: any) {
-  //   setUser((prev) => ({ ...prev, lastName: event.target.value }));
-  //   if (event.target.value) {
-  //     validationData.current.lastNameValid = true;
-  //     checkAllValidationTrue();
-  //   }
-  // }
-
-  // function handleChangePhone(event: any) {
-  //   var phoneno = /^(?:(?:\+|00)88|01)?\d{11}$/;
-  //   setUser((prev) => ({ ...prev, phone: event.target.value }));
-  //   if (event.target.value.match(phoneno)) {
-  //     if (event.target.value) {
-  //       validationData.current.phoneValid = true;
-  //       checkAllValidationTrue();
-  //     }
-  //     console.log("yes");
-  //   } else {
-  //     console.log("no");
-  //   }
-  // }
-
-  // function handleChangeGender(event: any) {
-  //   setUser((prev) => ({ ...prev, gender: event.target.value }));
-  //   setChecked(event.target.value);
-  //   if (event.target.value) {
-  //     validationData.current.genderValid = true;
-  //     checkAllValidationTrue();
-  //   }
-  //   console.log(user);
-  // }
-
-  // function handleChangeEmail(event: any) {
-  //   setUser((prev) => ({ ...prev, emailAddress: event.target.value }));
-  //   if (validator.isEmail(event.target.value)) {
-  //     validationData.current.emailAddressValid = true;
-  //     checkAllValidationTrue();
-  //   }
-  // }
-
-  // const onChange = (selectedOptions: any) => {
-  //   // console.log("sel", selectedOptions);
-  //   setSelected(selectedOptions);
-
-  //   setUser((prev) => ({
-  //     ...prev,
-  //     category: selectedOptions.map((d: { label: any }) => d.label),
-  //   }));
-  //   if (selectedOptions.length > 0) {
-  //     validationData.current.categoryValid = true;
-  //     checkAllValidationTrue();
-  //   }
-  // };
-
-  // function Submit(event: any) {
-  //   event.preventDefault();
-
-  //   addUser(user);
-  //   console.log(user);
-
-  //   setUserData([...userData, user]);
-  //   setRows([...userData, user]);
-  //   setSelected([]);
-  //   setChecked("");
-  //   console.log("fin", userData);
-  //   setUser({
-  //     firstName: "",
-  //     lastName: "",
-  //     emailAddress: "",
-  //     phone: "",
-  //     gender: "",
-  //     category: [],
-  //   });
-  //   validationData.current.firstNameValid = false;
-  //   validationData.current.lastNameValid = false;
-  //   validationData.current.emailAddressValid = false;
-  //   validationData.current.phoneValid = false;
-  //   validationData.current.genderValid = false;
-  //   validationData.current.categoryValid = false;
-  //   allTrue.current = false;
-  // }
-
-  function checkAllValidationTrue() {
-    let indicator = true;
-    console.log(validationData);
-    if (
-      validationData.current.firstNameValid === true &&
-      validationData.current.lastNameValid === true &&
-      validationData.current.emailAddressValid === true &&
-      validationData.current.phoneValid === true &&
-      validationData.current.genderValid === true &&
-      validationData.current.categoryValid === true
-    ) {
-      allTrue.current = true;
-    }
-  }
 
   return (
     <div className="row overflow-auto">
@@ -201,7 +176,7 @@ function Form() {
             margin: "10px",
           }}
         >
-          <form className="Auth-form">
+          <form className="Auth-form" onSubmit={formik.handleSubmit}>
             <div className="container">
               <h3 className="Auth-form-title">Form</h3>
 
@@ -210,10 +185,10 @@ function Form() {
                 <input
                   type="text"
                   name="firstName"
-                  value={values.firstName}
+                  value={formik.values.firstName}
                   className="form-control mt-1"
                   placeholder="Enter First Name"
-                  onChange={handleChange}
+                  onChange={formik.handleChange}
                 />
               </div>
               <div className="form-group mt-3">
@@ -222,9 +197,9 @@ function Form() {
                   type="text"
                   name="lastName"
                   className="form-control mt-1"
-                  value={values.lastName}
+                  value={formik.values.lastName}
                   placeholder="Enter Last Name"
-                  onChange={handleChange}
+                  onChange={formik.handleChange}
                 />
               </div>
               <div className="form-group mt-3">
@@ -233,35 +208,35 @@ function Form() {
                   type="email"
                   name="emailAddress"
                   className="form-control mt-1"
-                  value={values.emailAddress}
+                  value={formik.values.emailAddress}
                   placeholder="Enter Email"
-                  onChange={handleChange}
+                  onChange={formik.handleChange}
                 />
               </div>
               <div className="form-group mt-3">
                 <label>Phone Number</label>
                 <input
                   type="tel"
-                  value={values.phone}
+                  value={formik.values.phone}
                   name="phone"
                   className="form-control mt-1"
                   placeholder="Enter Phone Number"
-                  onChange={handleChange}
+                  onChange={formik.handleChange}
                 />
               </div>
 
               <div className="form-group mt-3">
                 <label>Category</label>
-                <Select
-                  isMulti
-                  name="category"
-                  options={options}
-                  classNamePrefix="select"
-                  onChange={(selectedOption) => {
-                    // This inline function can now completely be reaplce by handleChange("year")
-                    handleChange("category");
+                <CustomSelect
+                  onChange={(value: any) => {
+                    console.log("hrllo", value);
+                    formik.setFieldValue(
+                      "category",
+                      value.map((item: any) => item.label)
+                    );
                   }}
-                  value={values.category}
+                  value={formik.values.category}
+                  options={options}
                 />
               </div>
 
@@ -272,7 +247,7 @@ function Form() {
                   value="Male"
                   name="gender"
                   style={{ marginLeft: 10 }}
-                  onChange={handleChange}
+                  onChange={formik.handleChange}
                 />{" "}
                 Male
                 <input
@@ -280,8 +255,7 @@ function Form() {
                   value="Female"
                   name="gender"
                   style={{ marginLeft: 10 }}
-                  onChange={handleChange}
-                  checked={checked === "Female"}
+                  onChange={formik.handleChange}
                 />{" "}
                 Female
                 <input
@@ -289,8 +263,7 @@ function Form() {
                   value="Other"
                   name="gender"
                   style={{ marginLeft: 10 }}
-                  onChange={handleChange}
-                  checked={checked === "Other"}
+                  onChange={formik.handleChange}
                 />{" "}
                 Other
               </div>
